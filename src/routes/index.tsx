@@ -8,7 +8,6 @@ import { StatsRow } from "@/components/site/StatsRow";
 import { CtaBand } from "@/components/site/CtaBand";
 import { Marquee } from "@/components/site/Marquee";
 import { ScrollReveal } from "@/components/site/ScrollReveal";
-import { ImpactChart } from "@/components/site/ImpactChart";
 import { ServiceList } from "@/components/site/ServiceList";
 import { FeatureGrid } from "@/components/site/FeatureGrid";
 import { SERVICES, INDUSTRIES } from "@/lib/site-data";
@@ -88,18 +87,6 @@ function HomePage() {
         <div className="mt-16">
           <ScrollReveal delay={0.2}>
             <StatsRow />
-          </ScrollReveal>
-        </div>
-
-        <div className="mt-16">
-          <ScrollReveal delay={0.3}>
-            <div className="rounded-xl border hairline bg-surface/60 p-8">
-              <div className="mb-6">
-                <p className="eyebrow mb-2">Impact by Practice Area</p>
-                <h3 className="display-md font-medium">Measurable outcomes across all services</h3>
-              </div>
-              <ImpactChart />
-            </div>
           </ScrollReveal>
         </div>
       </section>
