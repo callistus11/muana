@@ -83,12 +83,6 @@ function HomePage() {
             </div>
           </div>
         </ScrollReveal>
-
-        <div className="mt-16">
-          <ScrollReveal delay={0.2}>
-            <StatsRow />
-          </ScrollReveal>
-        </div>
       </section>
 
       {/* Why */}
