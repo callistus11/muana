@@ -107,7 +107,7 @@ export function Hero() {
               </span>
               {slide.eyebrow}
             </p>
-            <h1 className="mt-4 text-balance text-6xl font-light leading-tight md:text-7xl">
+            <h1 className="mt-4 text-balance text-6xl font-normal leading-tight md:text-7xl">
               {slide.title.map((line, idx) => (
                 <span key={idx} className="block overflow-hidden">
                   <motion.span
@@ -129,7 +129,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-2 max-w-2xl text-[10px] leading-relaxed text-muted-foreground md:text-[11px]"
+              className="mt-2 max-w-2xl text-base leading-relaxed text-muted-foreground"
             >
               {slide.body}
             </motion.p>
