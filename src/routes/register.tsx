@@ -1,83 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Calendar, Clock, Users, CheckCircle2, X } from "lucide-react";
-import { SectionHeader } from "@/components/site/SectionHeader";
-import { CtaBand } from "@/components/site/CtaBand";
-
-const COURSES = [
-  {
-    id: "cloud-fundamentals",
-    title: "Cloud Development Fundamentals",
-    duration: "5 days",
-    delivery: "Virtual · Onsite",
-    capacity: "20 participants",
-    price: "$2,500",
-    description: "Master cloud platforms, services, and deployment patterns with hands-on labs and real-world projects.",
-    topics: [
-      "Cloud computing fundamentals",
-      "AWS/Azure/GCP deep dive",
-      "Serverless architecture patterns",
-      "Security best practices"
-    ]
-  },
-  {
-    id: "kubernetes",
-    title: "Container Orchestration with Kubernetes",
-    duration: "4 days",
-    delivery: "Virtual · Workshop",
-    capacity: "15 participants",
-    price: "$2,200",
-    description: "Learn to deploy, manage, and scale containerized applications using Kubernetes in production environments.",
-    topics: [
-      "Docker containers mastery",
-      "Kubernetes architecture",
-      "Deployment strategies",
-      "Monitoring & troubleshooting"
-    ]
-  },
-  {
-    id: "devops-cicd",
-    title: "DevOps & CI/CD Pipelines",
-    duration: "3 days",
-    delivery: "Virtual · Hybrid",
-    capacity: "25 participants",
-    price: "$1,800",
-    description: "Build automated CI/CD pipelines, implement infrastructure as code, and establish DevOps best practices.",
-    topics: [
-      "CI/CD pipeline design",
-      "GitOps workflows",
-      "Infrastructure as Code",
-      "Observability patterns"
-    ]
-  },
-  {
-    id: "ai-executives",
-    title: "AI for Executives",
-    duration: "2 days",
-    delivery: "Onsite · Workshop",
-    capacity: "12 participants",
-    price: "$3,000",
-    description: "Strategic-level understanding of AI capabilities, implementation roadmap, and organizational transformation.",
-    topics: [
-      "AI landscape & trends",
-      "Business value assessment",
-      "Implementation strategy",
-      "Risk & governance"
-    ]
-  }
-];
+import { ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollReveal } from "@/components/site/ScrollReveal";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
     meta: [
-      { title: "Course Registration — Mauna Kea Consulting" },
+      { title: "Course Waiting List — MKC Microsoft Certification Bootcamps" },
       {
         name: "description",
-        content: "Register for our hands-on training courses in cloud, DevOps, AI, and more.",
+        content:
+          "MKC Microsoft Certification Bootcamps are at capacity. Join the priority waitlist for Azure, Fabric, AI, and security certifications.",
       },
-      { property: "og:title", content: "Course Registration — Mauna Kea Consulting" },
-      { property: "og:description", content: "Upskill your team with expert-led training." },
+      { property: "og:title", content: "Course Waiting List — MKC Microsoft Certification Bootcamps" },
+      {
+        property: "og:description",
+        content: "Join the priority waitlist to secure your spot in our next exclusive intake.",
+      },
       { property: "og:url", content: "/register" },
     ],
     links: [{ rel: "canonical", href: "/register" }],
@@ -85,256 +26,357 @@ export const Route = createFileRoute("/register")({
   component: RegisterPage,
 });
 
+const COURSE_CATEGORIES = [
+  {
+    title: "AI & Data Science",
+    tagline: "Proof your career against automation.",
+    courses: [
+      { id: "ai-900", code: "AI-900", title: "Azure AI Engineering" },
+      { id: "ai-102", code: "AI-102", title: "Azure AI Engineering" },
+      { id: "dp-100", code: "DP-100", title: "Azure Data Science" },
+    ],
+  },
+  {
+    title: "Microsoft Fabric & Analytics",
+    tagline: "Master the world's hottest data platform.",
+    courses: [
+      { id: "dp-600", code: "DP-600", title: "Microsoft Fabric Specialist" },
+      { id: "dp-700", code: "DP-700", title: "Microsoft Fabric Specialist" },
+      { id: "pl-300", code: "PL-300", title: "Power BI Data Analyst" },
+      { id: "dp-900", code: "DP-900", title: "Data Fundamentals" },
+    ],
+  },
+  {
+    title: "Cloud & Security",
+    tagline: "The backbone of modern enterprise.",
+    courses: [
+      { id: "az-900", code: "AZ-900", title: "Azure Fundamentals" },
+      { id: "sc-100", code: "SC-100", title: "Cybersecurity Architect" },
+    ],
+  },
+] as const;
+
+const ALL_COURSES = COURSE_CATEGORIES.flatMap((category) =>
+  category.courses.map((course) => ({ ...course, category: category.title })),
+);
+
+const WHY_MKC = [
+  {
+    title: "Cohort-Based Learning",
+    body: "Don't learn alone. Join a group of peers and industry experts.",
+  },
+  {
+    title: "Result-Oriented",
+    body: (
+      <>
+        We focus on the <strong>skills</strong> first and the <strong>exam</strong> second—ensuring
+        you can actually do the job.
+      </>
+    ),
+  },
+  {
+    title: "Exclusive Content",
+    body: 'Our waitlist members receive monthly "Tech-Briefs" while they wait for their session to start.',
+  },
+] as const;
+
+const TRAINING_TYPES = [
+  { value: "individual", label: "Individual Training" },
+  { value: "team", label: "Training for my Team" },
+] as const;
+
 function RegisterPage() {
+  const formRef = useRef<HTMLElement>(null);
   const [submitted, setSubmitted] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [courseError, setCourseError] = useState(false);
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const toggleCourse = (id: string) => {
+    setSelectedCourses((current) =>
+      current.includes(id) ? current.filter((c) => c !== id) : [...current, id],
+    );
+    setCourseError(false);
+  };
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (selectedCourses.length === 0) {
+      setCourseError(true);
+      return;
+    }
     setSubmitted(true);
   };
 
-  const course = COURSES.find(c => c.id === selectedCourse);
-
   return (
     <>
-      <section className="border-b hairline pt-32 pb-24 bg-gradient-to-b from-background to-surface/20">
-        <div className="container-page">
-          <SectionHeader
-            align="center"
-            eyebrow="Course Registration"
-            title={<>Elevate Your Team's Expertise.</>}
-            description="Premium training programs designed for professionals who demand excellence."
-          />
+      <section className="border-b hairline pt-32 pb-16 md:pb-20">
+        <div className="container-page max-w-3xl">
+          <ScrollReveal>
+            <p className="eyebrow mb-4">Course Waiting List</p>
+            <h1 className="display-lg font-medium">The Future is in High Demand. Are You?</h1>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              MKC Microsoft Certification Bootcamps are currently at capacity. Join the priority
+              waitlist to secure your spot in our next exclusive intake.
+            </p>
+            <button
+              type="button"
+              onClick={scrollToForm}
+              className="mt-8 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+            >
+              Join the Priority Waitlist
+              <ArrowUpRight className="h-4 w-4" />
+            </button>
+            <p className="mt-6 text-muted-foreground">
+              Identify the skills you want to master. We'll notify you when the next cohort launches.
+            </p>
+          </ScrollReveal>
         </div>
       </section>
 
-      <section className="container-page py-24">
-        <div className="grid gap-8 md:grid-cols-2">
-          {COURSES.map((course, index) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl border hairline bg-gradient-to-br from-surface/50 to-background p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              
-              <div className="relative">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-primary/80">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="mt-3 text-xl font-semibold leading-tight">{course.title}</h3>
-                  </div>
-                  <div className="ml-4 text-right">
-                    <p className="text-2xl font-semibold text-primary">{course.price}</p>
-                  </div>
-                </div>
+      <section className="container-page max-w-3xl py-16 md:py-20">
+        <ScrollReveal>
+          <div className="space-y-12">
+            {COURSE_CATEGORIES.map((category, index) => (
+              <div key={category.title}>
+                <h2 className="text-xl font-semibold">
+                  {index + 1}. {category.title}
+                </h2>
+                <p className="mt-1 italic text-muted-foreground">{category.tagline}</p>
+                <ul className="mt-5 space-y-3">
+                  {category.courses.map((course, courseIndex) => {
+                    const prev = category.courses[courseIndex - 1];
+                    const showCombinedCode =
+                      prev &&
+                      prev.title === course.title &&
+                      courseIndex > 0 &&
+                      category.courses[courseIndex - 1]?.code;
 
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                  {course.description}
-                </p>
+                    if (
+                      courseIndex > 0 &&
+                      prev?.title === course.title &&
+                      category.courses.some(
+                        (c, i) => i < courseIndex && c.title === course.title,
+                      )
+                    ) {
+                      if (courseIndex === category.courses.findIndex((c) => c.title === course.title) + 1) {
+                        return null;
+                      }
+                    }
 
-                <div className="mt-6 grid grid-cols-3 gap-4 border-t hairline pt-4">
-                  <div className="text-center">
-                    <Calendar className="mx-auto h-4 w-4 text-primary/60 mb-1" />
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Duration</p>
-                    <p className="mt-1 text-xs font-medium">{course.duration}</p>
-                  </div>
-                  <div className="text-center">
-                    <Clock className="mx-auto h-4 w-4 text-primary/60 mb-1" />
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Format</p>
-                    <p className="mt-1 text-xs font-medium">{course.delivery}</p>
-                  </div>
-                  <div className="text-center">
-                    <Users className="mx-auto h-4 w-4 text-primary/60 mb-1" />
-                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Capacity</p>
-                    <p className="mt-1 text-xs font-medium">{course.capacity}</p>
-                  </div>
-                </div>
+                    const sameTitleCourses = category.courses.filter((c) => c.title === course.title);
+                    const isFirstOfGroup =
+                      sameTitleCourses.length > 1 &&
+                      category.courses.findIndex((c) => c.title === course.title) === courseIndex;
 
-                <div className="mt-6">
-                  <p className="mb-2 text-[10px] uppercase tracking-widest text-muted-foreground">Curriculum</p>
-                  <ul className="space-y-1">
-                    {course.topics.map((topic, i) => (
-                      <li key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <div className="h-1 w-1 rounded-full bg-primary/60" />
-                        {topic}
+                    if (sameTitleCourses.length > 1 && !isFirstOfGroup) return null;
+
+                    const codeLabel =
+                      sameTitleCourses.length > 1
+                        ? sameTitleCourses.map((c) => c.code).join(" / ")
+                        : course.code;
+
+                    return (
+                      <li key={course.id} className="leading-relaxed">
+                        <span className="font-semibold">{codeLabel}:</span> {course.title}
                       </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <button
-                  onClick={() => setSelectedCourse(course.id)}
-                  className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary to-primary/90 px-6 py-3 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
-                >
-                  Register Now
-                  <ArrowUpRight className="h-4 w-4" />
-                </button>
+                    );
+                  })}
+                </ul>
               </div>
-            </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ScrollReveal>
       </section>
 
-      <CtaBand
-        eyebrow="Enterprise Solutions"
-        title="Need Custom Training?"
-        description="We design bespoke curricula and private cohorts tailored to your organization's specific requirements."
-      />
+      <div className="container-page max-w-3xl">
+        <hr className="border-t hairline" />
+      </div>
 
-      <AnimatePresence>
-        {selectedCourse && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
-            onClick={() => setSelectedCourse(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.3 }}
-              className="relative w-full max-w-lg overflow-hidden rounded-2xl border hairline bg-gradient-to-br from-surface to-background shadow-2xl shadow-primary/20"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-              
-              <div className="relative p-8">
-                <button
-                  onClick={() => setSelectedCourse(null)}
-                  className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full border hairline transition-colors hover:bg-secondary"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+      <section className="container-page max-w-3xl py-16 md:py-20">
+        <ScrollReveal>
+          <h2 className="display-md font-medium">Why wait for MKC?</h2>
+          <ul className="mt-8 space-y-6">
+            {WHY_MKC.map((item) => (
+              <li key={item.title} className="leading-relaxed">
+                <span className="font-semibold">{item.title}:</span>{" "}
+                <span className="text-muted-foreground">{item.body}</span>
+              </li>
+            ))}
+          </ul>
+        </ScrollReveal>
+      </section>
 
-                {submitted ? (
-                  <div className="flex flex-col items-center gap-6 py-8 text-center">
-                    <div className="grid h-16 w-16 place-items-center rounded-full bg-primary/10 ring-2 ring-primary/30">
-                      <CheckCircle2 className="h-8 w-8 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">Registration Submitted</h3>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        We'll contact you within 24 hours with payment details and next steps.
-                      </p>
-                    </div>
+      <div className="container-page max-w-3xl">
+        <hr className="border-t hairline" />
+      </div>
+
+      <section ref={formRef} id="waitlist-form" className="container-page max-w-3xl py-16 md:py-24">
+        <ScrollReveal>
+          <h2 className="display-md font-medium">Join the Priority Waitlist</h2>
+          <p className="mt-4 text-muted-foreground">
+            Tell us what you want to learn. We'll notify you when the next session is live.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Selected options can be changed later.
+          </p>
+
+          <AnimatePresence mode="wait">
+            {submitted ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4 }}
+                className="mt-10 border-t hairline pt-10"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary/10 ring-1 ring-primary/20">
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-semibold">You're on the priority waitlist.</p>
+                    <p className="mt-2 leading-relaxed text-muted-foreground">
+                      We'll notify you when the next cohort launches.
+                    </p>
                     <button
+                      type="button"
                       onClick={() => {
                         setSubmitted(false);
-                        setSelectedCourse(null);
+                        setSelectedCourses([]);
                       }}
-                      className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:-translate-y-0.5"
+                      className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
                     >
-                      Close
+                      Submit another response
+                      <ArrowUpRight className="h-4 w-4" />
                     </button>
                   </div>
-                ) : (
-                  <>
-                    <div className="mb-6">
-                      <p className="font-mono text-[10px] uppercase tracking-widest text-primary">
-                        Register for
-                      </p>
-                      <h3 className="mt-2 text-xl font-semibold">{course?.title}</h3>
-                      <p className="mt-1 text-lg text-primary font-medium">{course?.price}</p>
-                    </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.form
+                key="form"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onSubmit={onSubmit}
+                className="mt-10 space-y-8"
+              >
+                <Field label="Name" required name="name" />
+                <Field label="Email" required name="email" type="email" />
 
-                    <form onSubmit={onSubmit} className="space-y-4">
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label className="mb-1.5 block text-xs font-medium">First Name <span className="text-primary">*</span></label>
-                          <input
-                            required
-                            type="text"
-                            className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                          />
+                <div>
+                  <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                    I am interested in
+                  </p>
+                  <div className="space-y-6">
+                    {COURSE_CATEGORIES.map((category) => (
+                      <div key={category.title}>
+                        <p className="mb-3 text-sm font-semibold">{category.title}</p>
+                        <div className="space-y-3">
+                          {category.courses.map((course) => (
+                            <label
+                              key={course.id}
+                              className="flex cursor-pointer items-start gap-3"
+                            >
+                              <Checkbox
+                                checked={selectedCourses.includes(course.id)}
+                                onCheckedChange={() => toggleCourse(course.id)}
+                                className="mt-0.5"
+                              />
+                              <span className="text-sm leading-relaxed">
+                                <span className="font-semibold">{course.code}:</span> {course.title}
+                              </span>
+                            </label>
+                          ))}
                         </div>
-                        <div>
-                          <label className="mb-1.5 block text-xs font-medium">Last Name <span className="text-primary">*</span></label>
-                          <input
-                            required
-                            type="text"
-                            className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                          />
-                        </div>
                       </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-medium">Email <span className="text-primary">*</span></label>
-                        <input
-                          required
-                          type="email"
-                          className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-medium">Company</label>
-                        <input
-                          type="text"
-                          className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-medium">Phone</label>
-                        <input
-                          type="tel"
-                          className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-medium">Participants <span className="text-primary">*</span></label>
-                        <input
-                          required
-                          type="number"
-                          min="1"
-                          className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-medium">Preferred Dates</label>
-                        <input
-                          type="text"
-                          placeholder="e.g., First week of March"
-                          className="w-full rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-xs font-medium">Additional Notes</label>
-                        <textarea
-                          rows={3}
-                          className="w-full resize-none rounded-lg border hairline bg-background/80 px-4 py-2.5 text-sm outline-none transition-all focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                        />
-                      </div>
-                      <div className="flex gap-3 pt-2">
-                        <button
-                          type="submit"
-                          className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-primary to-primary/90 px-6 py-3 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:-translate-y-0.5"
-                        >
-                          Complete Registration
-                          <ArrowUpRight className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedCourse(null)}
-                          className="inline-flex items-center justify-center rounded-lg border hairline px-6 py-3 text-sm font-medium transition-colors hover:bg-secondary"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </form>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    ))}
+                  </div>
+                  {courseError && (
+                    <p className="mt-3 text-sm text-primary">
+                      Please select at least one course.
+                    </p>
+                  )}
+                  {selectedCourses.map((id) => (
+                    <input key={id} type="hidden" name="courses" value={id} />
+                  ))}
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="training-type"
+                    className="mb-1 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground"
+                  >
+                    I am looking for
+                  </label>
+                  <select
+                    id="training-type"
+                    name="trainingType"
+                    required
+                    defaultValue=""
+                    className="w-full appearance-none border-0 border-b hairline bg-transparent px-0 py-3 text-sm outline-none transition-colors focus:border-primary rounded-none"
+                  >
+                    <option value="" disabled>
+                      Select an option
+                    </option>
+                    {TRAINING_TYPES.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="border-t hairline pt-8">
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+                  >
+                    Secure My Priority Status
+                    <ArrowUpRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </ScrollReveal>
+      </section>
     </>
+  );
+}
+
+function Field({
+  label,
+  name,
+  type = "text",
+  required,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+}) {
+  return (
+    <div>
+      <label
+        htmlFor={name}
+        className="mb-1 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground"
+      >
+        {label}
+        {required && <span className="text-primary"> *</span>}
+      </label>
+      <input
+        id={name}
+        type={type}
+        name={name}
+        required={required}
+        className="w-full border-0 border-b hairline bg-transparent px-0 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-primary rounded-none"
+      />
+    </div>
   );
 }

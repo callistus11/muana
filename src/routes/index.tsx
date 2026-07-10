@@ -116,25 +116,25 @@ function HomePage() {
       </section>
 
       {/* Services */}
-      <section className="container-page py-24 md:py-32">
-        <ScrollReveal>
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <SectionHeader
-              eyebrow="Our core services"
-              title={<>End‑to‑end technology, built for measurable impact.</>}
-              description="Seven practice areas designed to work independently — or as a single, coordinated transformation program."
-            />
-            <Link
-              to="/services"
-              className="inline-flex items-center gap-2 rounded-md border hairline px-4 py-2 text-sm transition-colors hover:bg-secondary"
-            >
-              All services <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </ScrollReveal>
-        <div className="mt-14">
-          <ServiceList services={SERVICES.slice(0, 6)} />
+      <section className="border-y hairline">
+        <div className="container-page pt-24 pb-14 md:pt-32 md:pb-16">
+          <ScrollReveal>
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+              <SectionHeader
+                eyebrow="Our core services"
+                title={<>End‑to‑end technology, built for measurable impact.</>}
+                description="Seven practice areas designed to work independently — or as a single, coordinated transformation program."
+              />
+              <Link
+                to="/services"
+                className="inline-flex items-center gap-2 rounded-md border hairline px-4 py-2 text-sm transition-colors hover:bg-secondary"
+              >
+                All services <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
+        <ServiceList services={SERVICES.slice(0, 6)} />
       </section>
 
       {/* Industries strip */}

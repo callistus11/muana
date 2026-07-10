@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { motion } from "framer-motion";
-import { ArrowUpRight, CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { SectionHeader } from "@/components/site/SectionHeader";
+import { CtaBand } from "@/components/site/CtaBand";
+import { StatsRow } from "@/components/site/StatsRow";
+import { ScrollReveal } from "@/components/site/ScrollReveal";
+import { REGIONS, SERVICES } from "@/lib/site-data";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -22,6 +26,23 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
+const CONTACT_DETAILS = [
+  {
+    label: "General enquiries",
+    value: "hello@mkcsen.com",
+    href: "mailto:hello@mkcsen.com",
+  },
+  {
+    label: "Coverage",
+    value: "Africa · Middle East",
+  },
+  {
+    label: "Response",
+    value: "Within 24 hours",
+    note: "Business days, all time zones",
+  },
+] as const;
+
 function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
 
@@ -32,142 +53,204 @@ function ContactPage() {
 
   return (
     <>
-      <section className="border-b hairline pt-32 pb-16">
+      <section className="border-b hairline pt-32 pb-20">
         <div className="container-page">
           <SectionHeader
-            align="center"
             eyebrow="Contact"
-            title={<>Contact Mauna Kea Consulting.</>}
-            description="Use this form for formal requests — pilots, proposals, training, and partnerships."
+            title={
+              <>
+                Start a conversation —{" "}
+                <span className="text-primary">we respond within 24 hours.</span>
+              </>
+            }
+            description="Pilots, proposals, training, and partnerships across Cloud, Cybersecurity, Data, AI, and HPC."
           />
         </div>
       </section>
 
-      <section className="container-page py-20">
-        <div className="grid gap-16 md:grid-cols-12">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="space-y-8 md:col-span-5"
-          >
-            <div>
-              <p className="eyebrow mb-4">Let's start a conversation</p>
-              <h2 className="display-xl font-medium leading-[1.15]">
-                Whether you're modernizing cloud, strengthening security, or deploying AI — we're ready to help.
-              </h2>
-            </div>
+      <section className="container-page py-16 md:py-20">
+        <StatsRow />
+      </section>
 
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                  <Mail className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium">Email us</p>
-                  <p className="mt-1 text-sm text-muted-foreground">hello@mkcsen.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                  <MapPin className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium">Our regions</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Africa · Middle East</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                  <Phone className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium">Response time</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Within 24 hours</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t hairline pt-8">
-              <p className="text-base font-semibold">Prefer to talk directly?</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                If you already know the topic and stakeholders, book time with an expert.
-              </p>
-              <Link
-                to="/contact"
-                className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
-              >
-                Book time with an expert <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="md:col-span-7"
-          >
-            {submitted ? (
-              <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                <div className="grid h-20 w-20 place-items-center rounded-full bg-primary/10 ring-1 ring-primary/20">
-                  <CheckCircle2 className="h-10 w-10 text-primary" />
-                </div>
-                <div>
-                  <p className="display-lg font-medium">Thanks — message received.</p>
-                  <p className="mt-3 text-lg text-muted-foreground">
-                    A member of our team will get back to you within 24 hours.
+      <section className="section-light border-y hairline">
+        <div className="container-page py-20 md:py-28">
+          <ScrollReveal>
+            <div className="grid gap-16 lg:grid-cols-12 lg:gap-20">
+              <div className="lg:col-span-8">
+                <div className="mb-10 max-w-xl">
+                  <p className="eyebrow mb-4">Enquiry form</p>
+                  <h2 className="display-lg font-medium">Tell us about your initiative.</h2>
+                  <p className="mt-4 text-muted-foreground">
+                    Share a few details and a consultant will follow up with next steps tailored to
+                    your goals.
                   </p>
                 </div>
+
+                <AnimatePresence mode="wait">
+                  {submitted ? (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.4 }}
+                      className="max-w-lg border-t hairline pt-12"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary/10 ring-1 ring-primary/20">
+                          <CheckCircle2 className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-xl font-semibold">Message received.</p>
+                          <p className="mt-2 leading-relaxed text-muted-foreground">
+                            A member of our team will be in touch within 24 hours.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setSubmitted(false)}
+                            className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                          >
+                            Send another message
+                            <ArrowUpRight className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.form
+                      key="form"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onSubmit={onSubmit}
+                      className="space-y-8"
+                    >
+                      <div className="grid gap-8 sm:grid-cols-2">
+                        <Field label="Name" required name="name" />
+                        <Field label="Company" name="company" />
+                      </div>
+                      <div className="grid gap-8 sm:grid-cols-2">
+                        <Field label="Email" required name="email" type="email" />
+                        <Field label="Role" name="role" placeholder="e.g., CTO, IT Director" />
+                      </div>
+                      <SelectField label="Area of interest" required name="interest" />
+                      <Field
+                        label="Message"
+                        required
+                        name="message"
+                        multiline
+                        placeholder="Describe your goals, timeline, and stakeholders..."
+                      />
+                      <div className="flex flex-col gap-5 border-t hairline pt-8 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="submit"
+                          className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+                        >
+                          Submit message
+                          <ArrowUpRight className="h-4 w-4" />
+                        </button>
+                        <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
+                          Your details are used only to respond to this enquiry.
+                        </p>
+                      </div>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
               </div>
-            ) : (
-              <form onSubmit={onSubmit} className="space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <Field label="Name" required name="name" />
-                  <Field label="Company" name="company" />
+
+              <aside className="lg:col-span-4">
+                <div className="lg:sticky lg:top-28">
+                  <p className="eyebrow mb-6">Direct contact</p>
+                  <div className="space-y-0">
+                    {CONTACT_DETAILS.map((item, index) => (
+                      <div
+                        key={item.label}
+                        className={`py-6 ${index > 0 ? "border-t hairline" : ""}`}
+                      >
+                        <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                          {item.label}
+                        </p>
+                        {"href" in item ? (
+                          <a
+                            href={item.href}
+                            className="mt-2 block text-lg font-medium transition-colors hover:text-primary"
+                          >
+                            {item.value}
+                          </a>
+                        ) : (
+                          <p className="mt-2 text-lg font-medium">{item.value}</p>
+                        )}
+                        {"note" in item && (
+                          <p className="mt-1 text-sm text-muted-foreground">{item.note}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 border-t hairline pt-8">
+                    <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+                      Training
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      For course registration, visit our training catalog.
+                    </p>
+                    <Link
+                      to="/register"
+                      className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary"
+                    >
+                      View courses <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <Field label="Email" required name="email" type="email" />
-                  <Field label="Role" name="role" />
-                </div>
-                <Field
-                  label="Area of interest"
-                  required
-                  name="interest"
-                  placeholder="e.g., Cloud Migration, Cybersecurity, AI Implementation"
-                />
-                <div>
-                  <label className="mb-2 block text-sm font-medium">
-                    Message <span className="text-primary">*</span>
-                  </label>
-                  <textarea
-                    required
-                    name="message"
-                    rows={6}
-                    className="w-full resize-none rounded-lg border hairline bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-                  />
-                </div>
-                <div className="flex items-center justify-between border-t hairline pt-6">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
-                  >
-                    Submit message
-                    <ArrowUpRight className="h-4 w-4" />
-                  </button>
-                  <p className="text-xs text-muted-foreground">
-                    We use your details only to follow up on this enquiry.
-                  </p>
-                </div>
-              </form>
-            )}
-          </motion.div>
+              </aside>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
+
+      <section className="container-page py-20 md:py-28">
+        <SectionHeader eyebrow="Global reach" title="Where we work." />
+        <div className="mt-12 space-y-8">
+          {(
+            [
+              { label: "Africa", note: "Emerging markets with explosive growth potential.", list: REGIONS.africa },
+              { label: "Middle East", note: "Digital transformation hubs with ambitious vision.", list: REGIONS.middleEast },
+            ] as const
+          ).map((region, i) => (
+            <motion.div
+              key={region.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="relative overflow-hidden rounded-2xl border hairline bg-surface/40 p-10"
+            >
+              <div className="relative z-10">
+                <p className="eyebrow">{region.label}</p>
+                <h3 className="mt-4 display-md font-medium">{region.label}</h3>
+                <p className="mt-3 text-muted-foreground">{region.note}</p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  {region.list.map((country) => (
+                    <span
+                      key={country}
+                      className="rounded-full border hairline bg-background/60 px-4 py-2 text-sm font-medium text-foreground/90"
+                    >
+                      {country}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <CtaBand
+        eyebrow="Next step"
+        title="Prefer a structured pilot?"
+        description="Tell us your priority area and we'll shape a focused two-week engagement with clear outcomes."
+      />
     </>
   );
 }
@@ -178,27 +261,77 @@ function Field({
   type = "text",
   required,
   placeholder,
-  full,
+  multiline,
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
   placeholder?: string;
-  full?: boolean;
+  multiline?: boolean;
+}) {
+  const inputClass =
+    "w-full border-0 border-b hairline bg-transparent px-0 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-primary rounded-none";
+
+  return (
+    <div>
+      <label className="mb-1 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        {label}
+        {required && <span className="text-primary"> *</span>}
+      </label>
+      {multiline ? (
+        <textarea
+          required={required}
+          name={name}
+          rows={5}
+          placeholder={placeholder}
+          className={`${inputClass} resize-none`}
+        />
+      ) : (
+        <input
+          type={type}
+          name={name}
+          required={required}
+          placeholder={placeholder}
+          className={inputClass}
+        />
+      )}
+    </div>
+  );
+}
+
+function SelectField({
+  label,
+  name,
+  required,
+}: {
+  label: string;
+  name: string;
+  required?: boolean;
 }) {
   return (
-    <div className={full ? "sm:col-span-2" : ""}>
-      <label className="mb-1.5 block text-sm font-medium">
-        {label} {required && <span className="text-primary">*</span>}
+    <div>
+      <label className="mb-1 block font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        {label}
+        {required && <span className="text-primary"> *</span>}
       </label>
-      <input
-        type={type}
-        name={name}
+      <select
         required={required}
-        placeholder={placeholder}
-        className="w-full rounded-md border hairline bg-background/60 px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-      />
+        name={name}
+        defaultValue=""
+        className="w-full appearance-none border-0 border-b hairline bg-transparent px-0 py-3 text-sm outline-none transition-colors focus:border-primary rounded-none"
+      >
+        <option value="" disabled>
+          Select a practice area
+        </option>
+        {SERVICES.map((service) => (
+          <option key={service.id} value={service.id}>
+            {service.name}
+          </option>
+        ))}
+        <option value="training">Training & Enablement</option>
+        <option value="other">Other</option>
+      </select>
     </div>
   );
 }

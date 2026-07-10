@@ -265,7 +265,7 @@ export const TRAINING_TRACKS = [
 ] as const;
 
 export const REGIONS = {
-  africa: ["Nigeria", "Kenya", "South Africa", "Egypt", "Morocco", "Ghana", "Rwanda"],
+  africa: ["Nigeria", "Kenya", "South Africa", "Egypt", "Morocco", "Ghana", "Rwanda", "Senegal", "Gambia", "Togo"],
   middleEast: ["UAE", "Saudi Arabia", "Qatar", "Bahrain", "Oman", "Kuwait"],
 } as const;
 
