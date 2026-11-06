@@ -237,7 +237,7 @@ export const TRAINING_TRACKS = [
   {
     name: "Developers & Engineers",
     description: "Deep technical training on cloud platforms, programming, and implementation.",
-    courses: ["Cloud Development Fundamentals", "Container Orchestration with Kubernetes", "DevOps & CI/CD Pipelines"],
+    courses: ["Cloud Certification Bootcamp: Microsoft Azure Fundamentals (AZ-900)", "Cloud Development Fundamentals", "Container Orchestration with Kubernetes", "DevOps & CI/CD Pipelines"],
     duration: "3–5 days per course",
     delivery: "Virtual · Onsite · Hybrid",
   },

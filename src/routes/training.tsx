@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowUpRight, GraduationCap, Layers, Laptop, Users } from "lucide-react";
+import { ArrowUpRight, GraduationCap, Layers, Laptop, Users, Calendar, DollarSign, Video, CheckCircle2 } from "lucide-react";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { CtaBand } from "@/components/site/CtaBand";
 import { Timeline } from "@/components/site/Timeline";
@@ -70,6 +70,29 @@ const DELIVERY_MODEL = [
     year: "03",
     title: "Enable & transfer",
     description: "Your teams leave with documented playbooks and the confidence to operate independently.",
+  },
+] as const;
+
+const AZ900_FEATURES = [
+  {
+    icon: CheckCircle2,
+    title: "No Tech Background Needed",
+    description: "We break down cloud essentials (compute, security, pricing, data storage) into plain English.",
+  },
+  {
+    icon: Video,
+    title: "Hands-On, Not Just Slides",
+    description: "You will actually log in and build basic services in the Microsoft Azure portal.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Built to Pass",
+    description: "Get real sample exam questions, tips on how Microsoft tests you, and a step-by-step roadmap to walk into the test with confidence.",
+  },
+  {
+    icon: DollarSign,
+    title: "Boost Your Resume",
+    description: "Add a verified, industry-standard Microsoft credential to your profile.",
   },
 ] as const;
 
@@ -226,6 +249,82 @@ function TrainingPage() {
               </div>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      <section className="section-light border-y hairline">
+        <div className="container-page py-20 md:py-28">
+          <ScrollReveal>
+            <div className="grid items-start gap-12 md:grid-cols-12">
+              <div className="md:col-span-5">
+                <p className="eyebrow mb-4">Featured Course</p>
+                <h2 className="display-lg font-medium">
+                  Cloud Certification Bootcamp:{" "}
+                  <span className="text-primary">Microsoft Azure Fundamentals (AZ-900)</span>
+                </h2>
+                <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                  New to the cloud & AI? The AZ-900 is Microsoft's globally recognized entry-level
+                  certification that proves you understand how modern cloud technology works.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">Start: Dec 1</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Video className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">Interactive Live Sessions on Teams + Guided Labs</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">USD 50</span>
+                  </div>
+                </div>
+              </div>
+              <div className="md:col-span-7 md:pt-2">
+                <p className="text-lg leading-relaxed text-muted-foreground">
+                  Designed for everyone — developers, IT, managers, sales, and complete beginners
+                  with zero tech background. We are hosting a focused, hands-on prep course designed
+                  not just to teach the concepts, but to guarantee you pass the official Microsoft
+                  exam on your first try.
+                </p>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {AZ900_FEATURES.map((feature, i) => (
+              <ScrollReveal key={feature.title} delay={i * 0.08}>
+                <div className="h-full rounded-xl border hairline bg-surface/70 p-7">
+                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
+                    <feature.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {feature.description}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal delay={0.3}>
+            <div className="mt-12 text-center">
+              <p className="text-lg font-medium">Ready to get certified?</p>
+              <p className="mt-2 text-muted-foreground">
+                Fill out the short form below to reserve your spot!
+              </p>
+              <a
+                href="https://forms.cloud.microsoft/e/6tg9jZJUtm?origin=lprLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+              >
+                Register Now
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
