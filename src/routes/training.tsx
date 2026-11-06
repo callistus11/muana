@@ -126,7 +126,7 @@ function TrainingPage() {
               className="group relative overflow-hidden bg-surface p-6 md:p-8"
             >
               <div className="pointer-events-none absolute -bottom-12 -right-12 h-32 w-32 rounded-full bg-primary/15 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <p className="relative display-xl font-medium">{stat.value}</p>
+              <p className="relative text-2xl font-medium md:text-3xl">{stat.value}</p>
               <p className="relative mt-2 text-xs uppercase tracking-widest text-muted-foreground">
                 {stat.label}
               </p>
@@ -255,74 +255,79 @@ function TrainingPage() {
       <section className="section-light border-y hairline">
         <div className="container-page py-20 md:py-28">
           <ScrollReveal>
-            <div className="grid items-start gap-12 md:grid-cols-12">
-              <div className="md:col-span-5">
-                <p className="eyebrow mb-4">Featured Course</p>
-                <h2 className="display-lg font-medium">
-                  Cloud Certification Bootcamp:{" "}
-                  <span className="text-primary">Microsoft Azure Fundamentals (AZ-900)</span>
-                </h2>
-                <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                  New to the cloud & AI? The AZ-900 is Microsoft's globally recognized entry-level
-                  certification that proves you understand how modern cloud technology works.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium">Start: Dec 1</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Video className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium">Interactive Live Sessions on Teams + Guided Labs</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium">USD 50</span>
-                  </div>
-                </div>
-              </div>
-              <div className="md:col-span-7 md:pt-2">
-                <p className="text-lg leading-relaxed text-muted-foreground">
-                  Designed for everyone — developers, IT, managers, sales, and complete beginners
-                  with zero tech background. We are hosting a focused, hands-on prep course designed
-                  not just to teach the concepts, but to guarantee you pass the official Microsoft
-                  exam on your first try.
-                </p>
-              </div>
-            </div>
+            <p className="eyebrow mb-4 text-center">Featured Course</p>
+            <h2 className="display-lg font-medium text-center">
+              Microsoft Azure Fundamentals
+              <span className="block mt-2 text-primary">AZ-900 Certification Bootcamp</span>
+            </h2>
           </ScrollReveal>
 
-          <div className="mt-14 grid gap-6 md:grid-cols-2">
-            {AZ900_FEATURES.map((feature, i) => (
-              <ScrollReveal key={feature.title} delay={i * 0.08}>
-                <div className="h-full rounded-xl border hairline bg-surface/70 p-7">
-                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
-                    <feature.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {feature.description}
+          <ScrollReveal delay={0.1}>
+            <div className="mt-12 rounded-2xl border hairline bg-gradient-to-br from-surface to-surface/50 p-8 md:p-12">
+              <div className="grid gap-8 lg:grid-cols-2">
+                <div className="space-y-6">
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    New to the cloud & AI? The AZ-900 is Microsoft's globally recognized entry-level
+                    certification that proves you understand how modern cloud technology works.
                   </p>
+                  <p className="leading-relaxed text-muted-foreground">
+                    Designed for everyone — developers, IT, managers, sales, and complete beginners
+                    with zero tech background. We're hosting a focused, hands-on prep course designed
+                    not just to teach the concepts, but to guarantee you pass the official Microsoft
+                    exam on your first try.
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-3 pt-4">
+                    <div className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+                      <Calendar className="h-4 w-4" />
+                      <span>Starts Dec 1</span>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+                      <Video className="h-4 w-4" />
+                      <span>Live Sessions + Labs</span>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+                      <DollarSign className="h-4 w-4" />
+                      <span>USD 50</span>
+                    </div>
+                  </div>
                 </div>
-              </ScrollReveal>
-            ))}
-          </div>
 
-          <ScrollReveal delay={0.3}>
-            <div className="mt-12 text-center">
-              <p className="text-lg font-medium">Ready to get certified?</p>
-              <p className="mt-2 text-muted-foreground">
-                Fill out the short form below to reserve your spot!
-              </p>
-              <a
-                href="https://forms.cloud.microsoft/e/6tg9jZJUtm?origin=lprLink"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
-              >
-                Register Now
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
+                <div className="space-y-4">
+                  {AZ900_FEATURES.map((feature, i) => (
+                    <div
+                      key={feature.title}
+                      className="flex gap-4 rounded-lg border hairline bg-surface/50 p-4"
+                    >
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
+                        <feature.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{feature.title}</h3>
+                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-10 flex flex-col items-center gap-4 border-t hairline pt-8">
+                <p className="text-lg font-medium">Ready to get certified?</p>
+                <a
+                  href="https://forms.cloud.microsoft/e/6tg9jZJUtm?origin=lprLink"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-md bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-glow transition-transform hover:-translate-y-0.5"
+                >
+                  Reserve Your Spot Now
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <p className="text-sm text-muted-foreground">
+                  Limited seats available — register today
+                </p>
+              </div>
             </div>
           </ScrollReveal>
         </div>
