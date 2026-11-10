@@ -19,27 +19,33 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export const NAV_LINKS = [
+export const NAV_LINKS: NavLink[] = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/industries", label: "Industries" },
-  { 
-    to: "/training", 
+  {
+    to: "/training",
     label: "Training",
     children: [
       { to: "/training", label: "Training Overview" },
       { to: "/active-courses", label: "Active Courses" },
       { to: "/register", label: "Register" },
-    ]
+    ],
   },
-  { 
+  {
     label: "Company",
     children: [
       { to: "/about", label: "About" },
       { to: "/contact", label: "Contact" },
-    ]
+    ],
   },
-] as const;
+];
+
+export type NavLink = {
+  to?: string;
+  label: string;
+  children?: readonly { to: string; label: string }[];
+};
 
 export type Service = {
   id: string;
