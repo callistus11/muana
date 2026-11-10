@@ -23,10 +23,22 @@ export const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/industries", label: "Industries" },
-  { to: "/training", label: "Training" },
-  { to: "/register", label: "Register" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { 
+    to: "/training", 
+    label: "Training",
+    children: [
+      { to: "/training", label: "Training Overview" },
+      { to: "/active-courses", label: "Active Courses" },
+      { to: "/register", label: "Register" },
+    ]
+  },
+  { 
+    label: "Company",
+    children: [
+      { to: "/about", label: "About" },
+      { to: "/contact", label: "Contact" },
+    ]
+  },
 ] as const;
 
 export type Service = {

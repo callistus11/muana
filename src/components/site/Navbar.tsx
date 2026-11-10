@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAV_LINKS } from "@/lib/site-data";
 import { Logo } from "./Logo";
@@ -8,6 +8,7 @@ import { Logo } from "./Logo";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hoveredDropdown, setHoveredDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -36,16 +37,50 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           {NAV_LINKS.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              activeOptions={{ exact: l.to === "/" }}
-              activeProps={{ className: "text-foreground bg-secondary" }}
-              inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
-              className="rounded-md px-3 py-2 text-sm transition-colors"
+            <div
+              key={l.label}
+              className="relative"
+              onMouseEnter={() => setHoveredDropdown(l.label)}
+              onMouseLeave={() => setHoveredDropdown(null)}
             >
-              {l.label}
-            </Link>
+              {l.children ? (
+                <>
+                  <button className="flex items-center gap-1 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {l.label}
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                  {hoveredDropdown === l.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute left-0 top-full mt-1 w-48 rounded-md border hairline bg-background shadow-lg"
+                    >
+                      <div className="py-1">
+                        {l.children.map((child) => (
+                          <Link
+                            key={child.to}
+                            to={child.to}
+                            className="block px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  to={l.to}
+                  activeOptions={{ exact: l.to === "/" }}
+                  activeProps={{ className: "text-foreground bg-secondary" }}
+                  inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+                  className="rounded-md px-3 py-2 text-sm transition-colors"
+                >
+                  {l.label}
+                </Link>
+              )}
+            </div>
           ))}
         </nav>
 
@@ -80,17 +115,51 @@ export function Navbar() {
           >
             <div className="container-page flex flex-col gap-1 py-4">
               {NAV_LINKS.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  onClick={() => setOpen(false)}
-                  activeOptions={{ exact: l.to === "/" }}
-                  activeProps={{ className: "bg-secondary text-foreground" }}
-                  inactiveProps={{ className: "text-muted-foreground" }}
-                  className="rounded-md px-3 py-3 text-base"
-                >
-                  {l.label}
-                </Link>
+                <div key={l.label}>
+                  {l.children ? (
+                    <div>
+                      <button
+                        onClick={() => setOpenDropdown(openDropdown === l.label ? null : l.label)}
+                        className="flex w-full items-center justify-between rounded-md px-3 py-3 text-base text-muted-foreground"
+                      >
+                        {l.label}
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform ${
+                            openDropdown === l.label ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                      {openDropdown === l.label && (
+                        <div className="ml-4 mt-1 flex flex-col gap-1">
+                          {l.children.map((child) => (
+                            <Link
+                              key={child.to}
+                              to={child.to}
+                              onClick={() => setOpen(false)}
+                              activeOptions={{ exact: child.to === "/" }}
+                              activeProps={{ className: "bg-secondary text-foreground" }}
+                              inactiveProps={{ className: "text-muted-foreground" }}
+                              className="rounded-md px-3 py-2 text-sm"
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      to={l.to}
+                      onClick={() => setOpen(false)}
+                      activeOptions={{ exact: l.to === "/" }}
+                      activeProps={{ className: "bg-secondary text-foreground" }}
+                      inactiveProps={{ className: "text-muted-foreground" }}
+                      className="rounded-md px-3 py-3 text-base"
+                    >
+                      {l.label}
+                    </Link>
+                  )}
+                </div>
               ))}
               <Link
                 to="/contact"
